@@ -12,6 +12,11 @@ if [ -z "$VARNISH_BACKEND_PORT" ]; then
 fi
 sed -i 's/BACKEND_PORT/'"${VARNISH_BACKEND_PORT}"'/' /etc/varnish/default.vcl
 
+if [ -z "$VARNISH_SECRET" ]; then
+    VARNISH_SECRET=secret
+fi
+echo $VARNISH_SECRET > /etc/varnish/secret
+
 # Disk cache storage.
 if [ -z "$VARNISH_MEMORY_SIZE" ]; then
     VARNISH_MEMORY_SIZE=256M
@@ -27,6 +32,7 @@ exec varnishd \
         -a :6081 \
         -T :6082 \
         -f /etc/varnish/default.vcl \
+        -S /etc/varnish/secret \
         -s main=malloc,${VARNISH_MEMORY_SIZE} \
         -s secondary=file,/tmp,${VARNISH_STORAGE_SIZE} \
         -t 120 \
