@@ -1,0 +1,35 @@
+language: python
+
+sudo: required
+
+services:
+  - docker
+
+env:
+  global:
+    - REPO=wodby/drupal-varnish
+    - COMMIT=${TRAVIS_COMMIT::8}
+
+install:
+  - docker build -t $REPO:$COMMIT ./
+  - docker run -d --name=php wodby/drupal-php:latest
+  - ip=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' php) && docker run -d --name=nginx -e "VARNISH_BACKEND_HOST=$ip" wodby/drupal-nginx:latest
+  - ip=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' nginx) && docker run -d --name=varnish -e "VARNISH_BACKEND_HOST=$ip" $REPO:$COMMIT
+
+script:
+  - docker ps | grep -q "$REPO:$COMMIT"
+  - docker exec varnish varnishd -V 2>&1 | grep varnish-4.1.2
+
+after_success: |
+  if [ "$TRAVIS_PULL_REQUEST" == "false" ] && ([ "$TRAVIS_BRANCH" == "master" ] || [ -n "$TRAVIS_TAG" ]); then
+    docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    docker tag $REPO:$COMMIT $REPO:latest;
+
+    if [ -n "$TRAVIS_TAG" ]; then docker tag $REPO:$COMMIT $REPO:$TRAVIS_TAG; fi
+
+    docker rmi $REPO:$COMMIT
+    docker push $REPO
+  fi
+
+after_failure:
+  - docker logs varnish
