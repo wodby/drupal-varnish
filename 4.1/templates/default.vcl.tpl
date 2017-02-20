@@ -1,12 +1,9 @@
 vcl 4.0;
-# Based on https://github.com/geerlingguy/drupal-vm/blob/45480a840f2d775fc4f4d23926215fd32a39ec56/provisioning/templates/drupalvm.vcl.j2
-
-# This Varnish VCL has been adapted from the Four Kitchens VCL for Varnish 3.
 
 # Default backend definition. Points to Apache, normally.
 backend default {
-    .host = "BACKEND_HOST";
-    .port = "BACKEND_PORT";
+    .host = "{{ getenv "VARNISH_BACKEND_HOST" }}";
+    .port = "{{ getenv "VARNISH_BACKEND_PORT" }}";
     .first_byte_timeout     = 300s;   # How long to wait before we receive a first byte from our backend?
     .connect_timeout        = 5s;     # How long to wait for a backend connection?
     .between_bytes_timeout  = 2s;     # How long to wait between bytes received from our backend?
@@ -51,13 +48,13 @@ sub vcl_recv {
             return (synth(403, "Not allowed."));
         }
 
-        # Logic for the ban, using the Purge-Cache-Tags header. For more info
+        # Logic for the ban, using the Cache-Tags header. For more info
         # see https://github.com/geerlingguy/drupal-vm/issues/397.
-        if (req.http.Purge-Cache-Tags) {
-            ban("obj.http.Purge-Cache-Tags ~ " + req.http.Purge-Cache-Tags);
+        if (req.http.Cache-Tags) {
+            ban("obj.http.Cache-Tags ~ " + req.http.Cache-Tags);
         }
         else {
-            return (synth(403, "Purge-Cache-Tags header missing."));
+            return (synth(403, "Cache-Tags header missing."));
         }
 
         # Throw a synthetic page so the request won't go to the backend.
@@ -74,6 +71,7 @@ sub vcl_recv {
         req.url ~ "^/update\.php$" ||
         req.url ~ "^/admin$" ||
         req.url ~ "^/admin/.*$" ||
+        req.url ~ "^/system/files/.*$" ||
         req.url ~ "^/flag/.*$" ||
         req.url ~ "^.*/ajax/.*$" ||
         req.url ~ "^.*/ahah/.*$") {
@@ -147,7 +145,7 @@ sub vcl_deliver {
     # Remove ban-lurker friendly custom headers when delivering to client.
     unset resp.http.X-Url;
     unset resp.http.X-Host;
-    unset resp.http.Purge-Cache-Tags;
+    unset resp.http.Cache-Tags;
 
     # Remove some headers
     unset resp.http.Via;

@@ -1,35 +1,43 @@
 language: python
 
-sudo: required
-
 services:
   - docker
 
 env:
   global:
-    - REPO=wodby/drupal-varnish
-    - COMMIT=${TRAVIS_COMMIT::8}
+    - DOCKER_COMPOSE_VERSION=1.10.0
+    - LATEST_VERSION=4.1
+  matrix:
+    - VERSION=4.1
 
-install:
-  - docker build -t $REPO:$COMMIT ./
-  - docker run -d --name=php wodby/drupal-php:latest
-  - ip=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' php) && docker run -d --name=nginx -e "VARNISH_BACKEND_HOST=$ip" wodby/drupal-nginx:latest
-  - ip=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' nginx) && docker run -d --name=varnish -e "VARNISH_BACKEND_HOST=$ip" $REPO:$COMMIT
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
 
 script:
-  - docker ps | grep -q "$REPO:$COMMIT"
-  - docker exec varnish varnishd -V 2>&1 | grep varnish-4.1.2
+  - cd ./$VERSION
+  - make && make test
 
 after_success: |
   if [ "$TRAVIS_PULL_REQUEST" == "false" ] && ([ "$TRAVIS_BRANCH" == "master" ] || [ -n "$TRAVIS_TAG" ]); then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    docker tag $REPO:$COMMIT $REPO:latest;
+    make release
 
-    if [ -n "$TRAVIS_TAG" ]; then docker tag $REPO:$COMMIT $REPO:$TRAVIS_TAG; fi
+    if [ -n "$TRAVIS_TAG" ]; then
+      make VERSION="$VERSION-$TRAVIS_TAG" release
+    fi
 
-    docker rmi $REPO:$COMMIT
-    docker push $REPO
+    if [ "$VERSION" == "$LATEST_VERSION" ]; then
+      make VERSION=latest release
+    fi
   fi
 
 after_failure:
-  - docker logs varnish
+  - docker-compose -f test/docker-compose.yml
+  - make logs
+
+notifications:
+  email:
+    on_success: never
