@@ -4,9 +4,9 @@ vcl 4.0;
 backend default {
     .host = "{{ getenv "VARNISH_BACKEND_HOST" }}";
     .port = "{{ getenv "VARNISH_BACKEND_PORT" }}";
-    .first_byte_timeout     = 300s;   # How long to wait before we receive a first byte from our backend?
-    .connect_timeout        = 5s;     # How long to wait for a backend connection?
-    .between_bytes_timeout  = 2s;     # How long to wait between bytes received from our backend?
+    .first_byte_timeout     = {{ getenv "VARNISH_BACKEND_FIRST_BYTE_TIMEOUT" "300s" }};   # How long to wait before we receive a first byte from our backend?
+    .connect_timeout        = {{ getenv "VARNISH_BACKEND_CONNECT_TIMEOUT" "5s" }};     # How long to wait for a backend connection?
+    .between_bytes_timeout  = {{ getenv "VARNISH_BACKEND_BETWEEN_BYTES_TIMEOUT" "2s" }};     # How long to wait between bytes received from our backend?
 }
 
 # Access control list for PURGE requests.
@@ -166,7 +166,7 @@ sub vcl_backend_response {
 
     # Cache 404s, 301s, at 500s with a short lifetime to protect the backend.
     if (beresp.status == 404 || beresp.status == 301 || beresp.status == 500) {
-        set beresp.ttl = 10m;
+        set beresp.ttl = {{ getenv "VARNISH_ERRORS_TTL" "10m" }};
     }
 
     # Enable streaming directly to backend for BigPipe responses.
@@ -183,8 +183,8 @@ sub vcl_backend_response {
         unset beresp.http.set-cookie;
     }
 
-    # Allow items to remain in cache up to 6 hours past their cache expiration.
-    set beresp.grace = 6h;
+    # Allow items to remain in cache up to N hours past their cache expiration.
+    set beresp.grace = {{ getenv "VARNISH_GRACE" "6h" }};
 }
 
 sub vcl_pipe {
