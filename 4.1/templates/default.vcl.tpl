@@ -11,7 +11,7 @@ backend default {
 
 # Access control list for PURGE requests.
 acl purge {
-    "172.17.0.0/16";
+    "172.16.0.0/12";
     "localhost";
     "127.0.0.1";
     "::1";
