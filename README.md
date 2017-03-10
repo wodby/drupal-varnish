@@ -6,6 +6,8 @@
 
 To get full docker-based local environment for Drupal see [Docker4Drupal](http://docker4drupal.org).
 
+[![Wodby Slack](https://www.google.com/s2/favicons?domain=www.slack.com) Join us on Slack](https://slack.wodby.com/)
+
 ## Supported tags and respective `Dockerfile` links
 
 - [`4.1-2.0.0`, `4.1`, `latest` (*4.1/Dockerfile*)](https://github.com/wodby/drupal-varnish/tree/master/4.1/Dockerfile)
