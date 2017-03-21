@@ -1,3 +1,3 @@
-FROM wodby/varnish:4.1-2.0.0
+FROM wodby/varnish:4.1
 
-COPY templates/* /etc/gotpl/
+COPY templates /etc/gotpl/
