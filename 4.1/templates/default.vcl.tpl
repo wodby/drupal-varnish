@@ -3,7 +3,7 @@ vcl 4.0;
 # Default backend definition. Points to Apache, normally.
 backend default {
     .host = "{{ getenv "VARNISH_BACKEND_HOST" }}";
-    .port = "{{ getenv "VARNISH_BACKEND_PORT" }}";
+    .port = "{{ getenv "VARNISH_BACKEND_PORT" "80" }}";
     .first_byte_timeout     = {{ getenv "VARNISH_BACKEND_FIRST_BYTE_TIMEOUT" "300s" }};   # How long to wait before we receive a first byte from our backend?
     .connect_timeout        = {{ getenv "VARNISH_BACKEND_CONNECT_TIMEOUT" "5s" }};     # How long to wait for a backend connection?
     .between_bytes_timeout  = {{ getenv "VARNISH_BACKEND_BETWEEN_BYTES_TIMEOUT" "2s" }};     # How long to wait between bytes received from our backend?

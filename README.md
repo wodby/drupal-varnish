@@ -19,7 +19,7 @@ See more at [wodby/varnish](https://github.com/wodby/varnish)
 | Environment Variable | Type | Default Value | Required | Description |
 | -------------------- | -----| ------------- | -------- | ----------- |
 | VARNISH_BACKEND_HOST                  | String |          | ✓ | |
-| VARNISH_BACKEND_PORT                  | String |          | ✓ | |
+| VARNISH_BACKEND_PORT                  | String | 80       |   | |
 | VARNISH_ERRORS_TTL                    | String | 10m      |   | | 
 | VARNISH_GRACE                         | String | 6h       |   | |
 | VARNISH_BACKEND_FIRST_BYTE_TIMEOUT    | String | 300s     |   | |
