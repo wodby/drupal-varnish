@@ -5,8 +5,6 @@
 [![Docker Stars](https://img.shields.io/docker/stars/wodby/drupal-varnish.svg)](https://hub.docker.com/r/wodby/drupal-varnish)
 [![Wodby Slack](http://slack.wodby.com/badge.svg)](http://slack.wodby.com)
 
-To get full docker-based local environment for Drupal see [Docker4Drupal](http://docker4drupal.org).
-
 ## Supported tags and respective `Dockerfile` links
 
 - [`4.1-2.0.0`, `4.1`, `latest` (*4.1/Dockerfile*)](https://github.com/wodby/drupal-varnish/tree/master/4.1/Dockerfile)
@@ -23,6 +21,6 @@ See more at [wodby/varnish](https://github.com/wodby/varnish)
 | VARNISH_BACKEND_CONNECT_TIMEOUT       | 5s   | |
 | VARNISH_BACKEND_BETWEEN_BYTES_TIMEOUT | 2s   | |
 
-## Using in production
+## Complete Drupal stack
 
-Deploy docker-based infrastructure for Drupal to your own server via [![Wodby](https://www.google.com/s2/favicons?domain=wodby.com) Wodby](https://wodby.com).
+To get full docker-based Drupal stack see [Docker4Drupal](https://github.com/wodby/docker4drupal).
