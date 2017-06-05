@@ -33,11 +33,3 @@ after_success: |
       make VERSION=latest release
     fi
   fi
-
-after_failure:
-  - docker-compose -f test/docker-compose.yml
-  - make logs
-
-notifications:
-  email:
-    on_success: never
