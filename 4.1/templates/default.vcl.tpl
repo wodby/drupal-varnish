@@ -23,16 +23,6 @@ sub vcl_recv {
     # Protecting against the HTTPOXY CGI vulnerability.
     unset req.http.proxy;
 
-    # Add an X-Forwarded-For header with the client IP address.
-    if (req.restarts == 0) {
-        if (req.http.X-Forwarded-For) {
-            set req.http.X-Forwarded-For = req.http.X-Forwarded-For + ", " + client.ip;
-        }
-        else {
-            set req.http.X-Forwarded-For = client.ip;
-        }
-    }
-
     # Only allow PURGE requests from IP addresses in the 'purge' ACL.
     if (req.method == "PURGE") {
         if (!client.ip ~ purge) {
