@@ -16,19 +16,22 @@ sub vcl_recv {
     unset req.http.proxy;
 
     if (req.method == "PURGE") {
+        {{ if not getenv "VARNISH_ALLOW_UNRESTRICTED_PURGE" }}
         # Allow PURGE requests from internal network only.
         if (req.http.X-Real-IP) {
             return (synth(405, "Not allowed."));
         }
+        {{ end }}
         return (hash);
     }
 
     if (req.method == "BAN") {
+        {{ if not getenv "VARNISH_ALLOW_UNRESTRICTED_BAN" }}
         # Allow BAN requests from internal network only.
         if (req.http.X-Real-IP) {
             return (synth(403, "Not allowed."));
         }
-
+        {{ end }}
         # Logic for the ban, using the Cache-Tags header. For more info
         # see https://github.com/geerlingguy/drupal-vm/issues/397.
         if (req.http.Cache-Tags) {
