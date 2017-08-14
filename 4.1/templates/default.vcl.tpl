@@ -9,32 +9,23 @@ backend default {
     .between_bytes_timeout  = {{ getenv "VARNISH_BACKEND_BETWEEN_BYTES_TIMEOUT" "2s" }};     # How long to wait between bytes received from our backend?
 }
 
-# Access control list for PURGE requests.
-acl purge {
-    "172.16.0.0/12";
-    "localhost";
-    "127.0.0.1";
-    "::1";
-}
-
 # Respond to incoming requests.
 sub vcl_recv {
 
     # Protecting against the HTTPOXY CGI vulnerability.
     unset req.http.proxy;
 
-    # Only allow PURGE requests from IP addresses in the 'purge' ACL.
     if (req.method == "PURGE") {
-        if (!client.ip ~ purge) {
+        # Allow PURGE requests from internal network only.
+        if (req.http.X-Real-IP) {
             return (synth(405, "Not allowed."));
         }
         return (hash);
     }
 
-    # Only allow BAN requests from IP addresses in the 'purge' ACL.
     if (req.method == "BAN") {
-        # Same ACL check as above:
-        if (!client.ip ~ purge) {
+        # Allow BAN requests from internal network only.
+        if (req.http.X-Real-IP) {
             return (synth(403, "Not allowed."));
         }
 
