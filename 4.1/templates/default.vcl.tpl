@@ -16,7 +16,7 @@ sub vcl_recv {
     unset req.http.proxy;
 
     if (req.method == "PURGE") {
-        {{ if not getenv "VARNISH_ALLOW_UNRESTRICTED_PURGE" }}
+        {{ if not (getenv "VARNISH_ALLOW_UNRESTRICTED_PURGE") }}
         # Allow PURGE requests from internal network only.
         if (req.http.X-Real-IP) {
             return (synth(405, "Not allowed."));
@@ -26,7 +26,7 @@ sub vcl_recv {
     }
 
     if (req.method == "BAN") {
-        {{ if not getenv "VARNISH_ALLOW_UNRESTRICTED_BAN" }}
+        {{ if not (getenv "VARNISH_ALLOW_UNRESTRICTED_BAN") }}
         # Allow BAN requests from internal network only.
         if (req.http.X-Real-IP) {
             return (synth(403, "Not allowed."));
