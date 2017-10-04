@@ -51,12 +51,12 @@ sub vcl_recv {
     }
 
     # Pass through any administrative or AJAX-related paths.
-    if (req.url ~ "^/status\.php$" ||
-        req.url ~ "^/update\.php$" ||
-        req.url ~ "^/admin$" ||
-        req.url ~ "^/admin/.*$" ||
-        req.url ~ "^/system/files/.*$" ||
-        req.url ~ "^/flag/.*$" ||
+    if (req.url ~ "^/([a-z]{2}/)?status\.php$" ||
+        req.url ~ "^/([a-z]{2}/)?update\.php$" ||
+        req.url ~ "^/([a-z]{2}/)?admin$" ||
+        req.url ~ "^/([a-z]{2}/)?admin/.*$" ||
+        req.url ~ "^/([a-z]{2}/)?system/files/.*$" ||
+        req.url ~ "^/([a-z]{2}/)?flag/.*$" ||
         req.url ~ "^.*/ajax/.*$" ||
         req.url ~ "^.*/ahah/.*$") {
            return (pass);
