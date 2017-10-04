@@ -11,9 +11,9 @@ Images are based on [wodby/varnish](https://travis-ci.org/wodby/varnish), built 
 
 ## Versions
 
-| Varnish                                                                   | Alpine Linux |
-| ------------------------------------------------------------------------- | ------------ |
-| [4.1](https://github.com/wodby/drupal-varnish/tree/master/4.1/Dockerfile) | 3.6          |
+| Image tag (Dockerfile)                                                  | Drupal | Varnish | Alpine Linux |
+| ----------------------------------------------------------------------- | ------ | ------- | ------------ |
+| [4.1](https://github.com/wodby/drupal-varnish/tree/master/4/Dockerfile) | *      | 4.1.3   | 3.6          |
 
 ## Environment Variables
 
