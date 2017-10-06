@@ -13,7 +13,6 @@
 * [Docker Hub](https://hub.docker.com/r/wodby/drupal-varnish)
 
 For better reliability we release images with stability tags (`wodby/drupal-varnish:4.1-X.X.X`) which correspond to git tags. We **strongly recommend** using images only with stability tags. Below listed basic tags:
-## Versions
 
 | Image tag (Dockerfile)                                                           | Drupal | Varnish |
 | -------------------------------------------------------------------------------- | ------ | ------- |
