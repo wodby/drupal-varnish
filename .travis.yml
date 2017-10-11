@@ -31,7 +31,7 @@ after_success: |
 
     if [[ -n "${TRAVIS_TAG}" ]]; then
       make release TAG="${TAG}-${TRAVIS_TAG}"
-    e;if [[ "${TAG}" == "${LATEST_TAG}" ]]; then
+    elif [[ "${TAG}" == "${LATEST_TAG}" ]]; then
       make release TAG="latest"
     fi
   fi
