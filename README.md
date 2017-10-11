@@ -7,13 +7,16 @@
 
 ## Docker Images
 
-Images are based on [wodby/varnish](https://travis-ci.org/wodby/varnish), built via [Travis CI](https://travis-ci.org/wodby/drupal-varnish) and published on [Docker Hub](https://hub.docker.com/r/wodby/drupal-varnish). 
+* All images are based on Alpine Linux
+* Base image: [wodby/varnish](https://github.com/wodby/varnish)
+* [Travis CI builds](https://travis-ci.org/wodby/drupal-varnish) 
+* [Docker Hub](https://hub.docker.com/r/wodby/drupal-varnish)
 
-## Versions
+For better reliability we release images with stability tags (`wodby/drupal-varnish:4.1-X.X.X`) which correspond to git tags. We **strongly recommend** using images only with stability tags. Below listed basic tags:
 
-| Varnish                                                                   | Alpine Linux |
-| ------------------------------------------------------------------------- | ------------ |
-| [4.1](https://github.com/wodby/drupal-varnish/tree/master/4.1/Dockerfile) | 3.6          |
+| Image tag (Dockerfile)                                                           | Drupal | Varnish |
+| -------------------------------------------------------------------------------- | ------ | ------- |
+| [4.1 (latest)](https://github.com/wodby/drupal-varnish/tree/master/4/Dockerfile) | *      | 4.1.3   |
 
 ## Environment Variables
 
@@ -28,6 +31,18 @@ See more at [wodby/varnish](https://github.com/wodby/varnish)
 | VARNISH_BACKEND_FIRST_BYTE_TIMEOUT    | 300s          |             |
 | VARNISH_BACKEND_CONNECT_TIMEOUT       | 5s            |             |
 | VARNISH_BACKEND_BETWEEN_BYTES_TIMEOUT | 2s            |             |
+
+VARNISH_EXCLUDE_URLS (backslashes must be escaped `\\`):
+
+```
+^(/update\\.php|/([a-z]{2}/)?admin|/([a-z]{2}/)?admin/.*|/([a-z]{2}/)?system/files/.*|/([a-z]{2}/)?flag/.*|.*/ajax/.*|.*/ahah/.*)$
+```
+
+VARNISH_STATIC_FILES:
+
+```
+pdf|asc|dat|txt|doc|xls|ppt|tgz|csv|png|gif|jpeg|jpg|ico|swf|css|js|svg
+```
 
 ## Complete Drupal stack
 
