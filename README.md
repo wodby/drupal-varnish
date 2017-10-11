@@ -32,6 +32,18 @@ See more at [wodby/varnish](https://github.com/wodby/varnish)
 | VARNISH_BACKEND_CONNECT_TIMEOUT       | 5s            |             |
 | VARNISH_BACKEND_BETWEEN_BYTES_TIMEOUT | 2s            |             |
 
+VARNISH_EXCLUDE_URLS (backslashes must be escaped `\\`):
+
+```
+^(/update\\.php|/([a-z]{2}/)?admin|/([a-z]{2}/)?admin/.*|/([a-z]{2}/)?system/files/.*|/([a-z]{2}/)?flag/.*|.*/ajax/.*|.*/ahah/.*)$
+```
+
+VARNISH_STATIC_FILES:
+
+```
+pdf|asc|dat|txt|doc|xls|ppt|tgz|csv|png|gif|jpeg|jpg|ico|swf|css|js|svg
+```
+
 ## Complete Drupal stack
 
 See [Docker4Drupal](https://github.com/wodby/docker4drupal)
