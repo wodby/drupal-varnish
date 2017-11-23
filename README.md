@@ -14,9 +14,9 @@
 
 For better reliability we release images with stability tags (`wodby/drupal-varnish:4.1-X.X.X`) which correspond to git tags. We **strongly recommend** using images only with stability tags. Below listed basic tags:
 
-| Image tag (Dockerfile)                                                           | Drupal | Varnish |
-| -------------------------------------------------------------------------------- | ------ | ------- |
-| [4.1 (latest)](https://github.com/wodby/drupal-varnish/tree/master/4/Dockerfile) | *      | 4.1.3   |
+| Image tag (Dockerfile)                                                                     | Drupal | Varnish |
+| ------------------------------------------------------------------------------------------ | ------ | ------- |
+| [4, 4.1, 4.1.3 (latest)](https://github.com/wodby/drupal-varnish/tree/master/4/Dockerfile) | 7/8    | 4.1.3   |
 
 ## Environment Variables
 

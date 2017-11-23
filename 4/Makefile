@@ -1,7 +1,7 @@
 -include env_make
 
 VARNISH_VER ?= 4.1.3
-TAG ?= 4.1
+TAG ?= $(VARNISH_VER)
 
 REPO = wodby/drupal-varnish
 NAME = drupal-varnish-$(VARNISH_VER)
