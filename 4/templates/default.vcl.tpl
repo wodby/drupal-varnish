@@ -121,6 +121,24 @@ sub vcl_recv {
     }
 }
 
+sub vcl_hash {
+    hash_data(req.url);
+
+    if (req.http.host) {
+        hash_data(req.http.host);
+    } else {
+        hash_data(server.ip);
+    }
+
+    # Use special internal SSL hash for https content
+    # X-Forwarded-Proto is set to https by Pound
+    if (req.http.X-Forwarded-Proto ~ "https") {
+        hash_data(req.http.X-Forwarded-Proto);
+    }
+
+    return (lookup);
+}
+
 # Set a header to track a cache HITs and MISSes.
 sub vcl_deliver {
     # Remove ban-lurker friendly custom headers when delivering to client.
@@ -169,27 +187,27 @@ sub vcl_backend_response {
 }
 
 sub vcl_pipe {
-  # Called upon entering pipe mode.
-  # In this mode, the request is passed on to the backend, and any further data from both the client
-  # and backend is passed on unaltered until either end closes the connection. Basically, Varnish will
-  # degrade into a simple TCP proxy, shuffling bytes back and forth. For a connection in pipe mode,
-  # no other VCL subroutine will ever get called after vcl_pipe.
+    # Called upon entering pipe mode.
+    # In this mode, the request is passed on to the backend, and any further data from both the client
+    # and backend is passed on unaltered until either end closes the connection. Basically, Varnish will
+    # degrade into a simple TCP proxy, shuffling bytes back and forth. For a connection in pipe mode,
+    # no other VCL subroutine will ever get called after vcl_pipe.
 
-  # Note that only the first request to the backend will have
-  # X-Forwarded-For set.  If you use X-Forwarded-For and want to
-  # have it set for all requests, make sure to have:
-  # set bereq.http.connection = "close";
-  # here.  It is not set by default as it might break some broken web
-  # applications, like IIS with NTLM authentication.
+    # Note that only the first request to the backend will have
+    # X-Forwarded-For set.  If you use X-Forwarded-For and want to
+    # have it set for all requests, make sure to have:
+    # set bereq.http.connection = "close";
+    # here.  It is not set by default as it might break some broken web
+    # applications, like IIS with NTLM authentication.
 
-  # set bereq.http.Connection = "Close";
+    # set bereq.http.Connection = "Close";
 
-  # Implementing websocket support (https://www.varnish-cache.org/docs/4.0/users-guide/vcl-example-websockets.html)
-  if (req.http.upgrade) {
-    set bereq.http.upgrade = req.http.upgrade;
-  }
+    # Implementing websocket support (https://www.varnish-cache.org/docs/4.0/users-guide/vcl-example-websockets.html)
+    if (req.http.upgrade) {
+        set bereq.http.upgrade = req.http.upgrade;
+    }
 
-  return (pipe);
+    return (pipe);
 }
 
 # In the event of an error, show friendlier messages.

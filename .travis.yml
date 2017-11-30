@@ -10,7 +10,7 @@ env:
     - LATEST_TAG=4.1
     - FROM_STABILITY_TAG="2.2.0"
   matrix:
-    - VERSION=4 TAG=4.1 VARNISH_VER=4.1.3
+    - MAJOR_VER=4 TAG=4.1
 
 install:
   - sudo apt-get update
@@ -21,17 +21,25 @@ install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
-  - cd ./"${VERSION}"
+  - cd ./"${MAJOR_VER}"
   - make && make test
 
 after_success: |
   if [[ "${TRAVIS_PULL_REQUEST}" == "false" && ("${TRAVIS_BRANCH}" == "master"  || -n "${TRAVIS_TAG}") ]]; then
     docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+
     make release
 
-    if [[ -n "${TRAVIS_TAG}" ]]; then
-      make release TAG="${TAG}-${TRAVIS_TAG}"
-    elif [[ "${TAG}" == "${LATEST_TAG}" ]]; then
+    if [[ -z "${VARNISH_VER}" ]]; then
+      make release TAG="${MAJOR_VER}"
+    fi
+
+    if [[ "${TAG}" == "${LATEST_TAG}" ]]; then
       make release TAG="latest"
     fi
   fi
+
+notifications:
+  on_failure: never
+  slack:
+    secure: "ZomVXB+VN4jP/9yemdbCKDrCNnvTEAbUeSbGJow4j0cJW5cjY7EZ2MSIiu7qK6J+vmIRRBqmbNt2xRnJiAj3cDZjZdTepy08fQPVPmjb5XWPufevFP5TJvKcOkNfAzCKk48dSA3liLI6U/cu2y33yL7JNocSM37nWxkFbfpwvZtJsWmASnn5CIrpV01MaccpB9YUFJnC1MdF6wBpb2Q6V/S1YNYV2hLQdOT3112Sj9Grtit7SHAjQtzbr7sCgWqZjB04QhUQcJeLov+sb0jgPLeFSceeI5iCXw7waExKoanQ4FYSZPugllf0/dVEFjcJVWCixvkG72MVgb6ASWlh190/Mf+dkFb0bU4zXkiC+MLi/evxzqe+jaQ3VR+/W+z47bsLsrOIZJRp83XtdgUsUyylZG6dbe4v55Shv6MU6s3nIrfcTg4LLsO/Pkkysl/yQ3U3DL9nr45aWYQcw0Po1P3CRX2l+5PrOOkYVBELsr1rHjSLbLd9bVCz9zhhfRCdayOJUTIFT7aAhpCmMlMGm/UIp5g4H8JhKoezSuU39hv2kKhYFfgvVMHn3JDpqHIxg5IYU1U12L5GnDyXeOX56hzWY48YMHt1GoTuRtkymN295srcxpKG+mjxoe3JlWtD38HrY3zpqGoKATGDyKrM0gjoXlJABm7nIPOuwBjtEq0="
