@@ -10,7 +10,7 @@ env:
     - LATEST_TAG=4.1
     - FROM_STABILITY_TAG=""
   matrix:
-    - MAJOR_VER=4 MINOR_VER=4.1
+    - MAJOR_VER=4 TAG=4.1
 
 install:
   - sudo apt-get update
@@ -29,12 +29,12 @@ after_success: |
     docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
 
     make release
-    make release TAG="${MINOR_VER}"
-    make release TAG="${MAJOR_VER}"
 
-    if [[ -n "${TRAVIS_TAG}" ]]; then
-      make release TAG="${TAG}-${TRAVIS_TAG}"
-    elif [[ "${TAG}" == "${LATEST_TAG}" ]]; then
+    if [[ -z "${VARNISH_VER}" ]]; then
+      make release TAG="${MAJOR_VER}"
+    fi
+
+    if [[ "${TAG}" == "${LATEST_TAG}" ]]; then
       make release TAG="latest"
     fi
   fi

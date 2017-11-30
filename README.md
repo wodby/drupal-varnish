@@ -12,11 +12,11 @@
 * [Travis CI builds](https://travis-ci.org/wodby/drupal-varnish) 
 * [Docker Hub](https://hub.docker.com/r/wodby/drupal-varnish)
 
-For better reliability we release images with stability tags (`wodby/drupal-varnish:4.1-X.X.X`) which correspond to git tags. We **strongly recommend** using images only with stability tags. Below listed basic tags:
+Supported tags and respective `Dockerfile` links:
 
-| Image tag (Dockerfile)                                                                     | Drupal | Varnish |
-| ------------------------------------------------------------------------------------------ | ------ | ------- |
-| [4, 4.1, 4.1.3 (latest)](https://github.com/wodby/drupal-varnish/tree/master/4/Dockerfile) | 7/8    | 4.1.3   |
+* `4`, `4.1`, `latest` [_(Dockerfile)_](https://github.com/wodby/drupal-varnish/tree/master/4/Dockerfile)
+
+For better reliability we additionally release images with stability tags (`wodby/drupal-varnish:4.1-X.X.X`) which correspond to [git tags](https://github.com/wodby/drupal-varnish/releases). We **strongly recommend** using images only with stability tags. 
 
 ## Environment Variables
 

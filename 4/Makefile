@@ -1,6 +1,6 @@
 -include env_make
 
-VARNISH_VER ?= 4.1.3
+VARNISH_VER ?= 4.1
 TAG ?= $(VARNISH_VER)
 
 REPO = wodby/drupal-varnish
@@ -11,7 +11,7 @@ ifneq ($(FROM_STABILITY_TAG),)
     FROM_TAG := $(FROM_TAG)-$(FROM_STABILITY_TAG)
 endif
 
-.PHONY: build test test-clean push shell run start stop logs clean release
+.PHONY: build test push shell run start stop logs clean release
 
 default: build
 
