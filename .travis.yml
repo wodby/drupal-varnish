@@ -8,9 +8,9 @@ env:
     - DOCKER_COMPOSE_VERSION=1.10.0
     - DOCKER_VERSION=17.06.2
     - LATEST_TAG=4.1
-    - FROM_STABILITY_TAG=2.2.1
+    - FROM_STABILITY_TAG=
   matrix:
-    - MAJOR_VER=4 TAG=4.1
+    - VARNISH_VER=4.1 TAG=4.1 EXTRA_TAG=4
 
 install:
   - sudo apt-get update
@@ -21,7 +21,7 @@ install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
-  - cd ./"${MAJOR_VER}"
+  - cd ./"${VARNISH_VER:0:1}"
   - make && make test
 
 after_success: |
@@ -34,8 +34,8 @@ after_success: |
 
     make release
 
-    if [[ -z "${VARNISH_VER}" ]]; then
-      make release TAG="${MAJOR_VER}"
+    if [[ -n "${EXTRA_TAG}" ]]; then
+      make release TAG="${EXTRA_TAG}"
     fi
 
     if [[ "${TAG}" == "${LATEST_TAG}" ]]; then
