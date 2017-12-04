@@ -21,7 +21,7 @@ install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
-  - cd ./"${MAJOR_VER}"
+  - cd ./"${VARNISH_VER:0:1}"
   - make && make test
 
 after_success: |
