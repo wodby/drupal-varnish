@@ -33,7 +33,7 @@ See more at [wodby/varnish](https://github.com/wodby/varnish)
 | `VARNISH_BACKEND_FIRST_BYTE_TIMEOUT`    | `300s`        |             |
 | `VARNISH_BACKEND_CONNECT_TIMEOUT`       | `5s`          |             |
 | `VARNISH_BACKEND_BETWEEN_BYTES_TIMEOUT` | `2s`          |             |
-| `VARNISH_STATIC_FILES_SKIP_CACHE`       |               |             |
+| `VARNISH_CACHE_STATIC_FILES`            |               |             |
 
 `VARNISH_EXCLUDE_URLS` (backslashes must be escaped `\\`):
 
