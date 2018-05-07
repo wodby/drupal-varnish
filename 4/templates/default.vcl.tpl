@@ -86,9 +86,9 @@ sub vcl_recv {
     # Removing cookies for static content so Varnish caches these files.
     if (req.url ~ "(?i)\.({{ $static_files }})(\?.*)?$") {
         unset req.http.Cookie;
-        {{ if not (getenv "VARNISH_CACHE_STATIC_FILES")) }}
+        {{ if not (getenv "VARNISH_CACHE_STATIC_FILES") }}
           # Do not use memory to cache static files.
-          return (pass)
+          return (pass);
         {{ end }}
     }
 
