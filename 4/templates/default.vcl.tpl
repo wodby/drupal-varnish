@@ -188,6 +188,14 @@ sub vcl_backend_response {
 
     # Allow items to remain in cache up to N hours past their cache expiration.
     set beresp.grace = {{ getenv "VARNISH_GRACE" "6h" }};
+
+    {{ if and (getenv "VARNISH_SECONDARY_STORAGE_CONDITION") (getenv "VARNISHD_SECONDARY_STORAGE") }}
+    # Switch to the secondary storage if needed
+    if ({{ getenv "VARNISH_SECONDARY_STORAGE_CONDITION" }}) {
+      set beresp.storage_hint = "secondary";
+      set beresp.http.x-varnish-storage = "secondary";
+    }
+    {{ end }}
 }
 
 sub vcl_pipe {
