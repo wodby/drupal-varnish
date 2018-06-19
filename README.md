@@ -7,7 +7,7 @@
 
 ## Docker Images
 
-!!! For better reliability we release images with stability tags (`wodby/drupal-varnish:4-X.X.X`) which correspond to [git tags](https://github.com/wodby/drupal-varnish/releases). We **STRONGLY RECOMMEND** using images only with stability tags. 
+❗For better reliability we release images with stability tags (`wodby/drupal-varnish:4-X.X.X`) which correspond to [git tags](https://github.com/wodby/drupal-varnish/releases). We strongly recommend using images only with stability tags. 
 
 Overview:
 
@@ -18,21 +18,23 @@ Overview:
 
 Supported tags and respective `Dockerfile` links:
 
-* `4`, `4.1`, `latest` [_(Dockerfile)_](https://github.com/wodby/drupal-varnish/tree/master/4/Dockerfile)
+* `4.1`, `4`, `latest` [_(Dockerfile)_](https://github.com/wodby/drupal-varnish/tree/master/4/Dockerfile)
 
 ## Environment Variables
 
 See more at [wodby/varnish](https://github.com/wodby/varnish)
 
-| Variable                                | Default Value | Description |
-| --------------------------------------- | ------------- | ----------- |
-| `VARNISH_ALLOW_UNRESTRICTED_BAN`        |               |             |
-| `VARNISH_ALLOW_UNRESTRICTED_PURGE`      |               |             |
-| `VARNISH_ERRORS_TTL`                    | `10m`         |             |
-| `VARNISH_GRACE`                         | `6h`          |             |
-| `VARNISH_BACKEND_FIRST_BYTE_TIMEOUT`    | `300s`        |             |
-| `VARNISH_BACKEND_CONNECT_TIMEOUT`       | `5s`          |             |
-| `VARNISH_BACKEND_BETWEEN_BYTES_TIMEOUT` | `2s`          |             |
+| Variable                                | Default Value | Description       |
+| --------------------------------------- | ------------- | ----------------- |
+| `VARNISH_ALLOW_UNRESTRICTED_BAN`        |               |                   |
+| `VARNISH_ALLOW_UNRESTRICTED_PURGE`      |               |                   |
+| `VARNISH_ERRORS_TTL`                    | `10m`         |                   |
+| `VARNISH_GRACE`                         | `6h`          |                   |
+| `VARNISH_BACKEND_FIRST_BYTE_TIMEOUT`    | `300s`        |                   |
+| `VARNISH_BACKEND_CONNECT_TIMEOUT`       | `5s`          |                   |
+| `VARNISH_BACKEND_BETWEEN_BYTES_TIMEOUT` | `2s`          |                   |
+| `VARNISH_CACHE_STATIC_FILES`            |               |                   |
+| `VARNISH_SECONDARY_STORAGE_CONDITION`   |               | Must be valid vcl |
 
 `VARNISH_EXCLUDE_URLS` (backslashes must be escaped `\\`):
 
@@ -45,6 +47,19 @@ See more at [wodby/varnish](https://github.com/wodby/varnish)
 ```
 pdf|asc|dat|txt|doc|xls|ppt|tgz|csv|png|gif|jpeg|jpg|ico|swf|css|js|svg
 ```
+
+`VARNISH_SECONDARY_STORAGE_CONDITION`
+
+Allows defining custom conditions for storing the cache object in the secondary 
+storage; as it is injected into an `if` it has to contain valid VCL syntax for it.
+
+Please note that `VARNISHD_SECONDARY_STORAGE` _(from the [base image](https://github.com/wodby/varnish))_
+ must be defined as well, otherwise the secondary storage would not be available.
+
+**Example:** instruct varnish to store in the secondary storage from the backend
+via custom header `X-Cache-Bin`:
+
+`VARNISH_STORAGE_CONDITION='beresp.http.x-cache-bin = "secondary"'`
 
 ## Orchestration actions
 
