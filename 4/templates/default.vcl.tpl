@@ -13,6 +13,8 @@ backend default {
 
 {{ $exclude_urls := (getenv "VARNISH_EXCLUDE_URLS" "^(/update\\.php|/([a-z]{2}/)?admin|/([a-z]{2}/)?admin/.*|/([a-z]{2}/)?system/files/.*|/([a-z]{2}/)?flag/.*|.*/ajax/.*|.*/ahah/.*)$") }}
 
+{{ $preserved_cookies := (getenv "VARNISH_PRESERVED_COOKIES" "SESS[a-z0-9]+|SSESS[a-z0-9]+|NO_CACHE") }}
+
 # Respond to incoming requests.
 sub vcl_recv {
 
@@ -107,7 +109,7 @@ sub vcl_recv {
         #    cookie string.
         set req.http.Cookie = ";" + req.http.Cookie;
         set req.http.Cookie = regsuball(req.http.Cookie, "; +", ";");
-        set req.http.Cookie = regsuball(req.http.Cookie, ";(SESS[a-z0-9]+|SSESS[a-z0-9]+|NO_CACHE)=", "; \1=");
+        set req.http.Cookie = regsuball(req.http.Cookie, ";({{ $preserved_cookies }})=", "; \1=");
         set req.http.Cookie = regsuball(req.http.Cookie, ";[^ ][^;]*", "");
         set req.http.Cookie = regsuball(req.http.Cookie, "^[; ]+|[; ]+$", "");
 
