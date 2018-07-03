@@ -36,25 +36,27 @@ See more at [wodby/varnish](https://github.com/wodby/varnish)
 | `VARNISH_GRACE`                         | `6h`          |                   |
 | `VARNISH_SECONDARY_STORAGE_CONDITION`   |               | Must be valid vcl |
 
-`VARNISH_EXCLUDE_URLS` (backslashes must be escaped `\\`):
+#### `VARNISH_EXCLUDE_URLS`
+
+Backslashes must be escaped `\\`
 
 ```
 ^(/update\\.php|/([a-z]{2}/)?admin|/([a-z]{2}/)?admin/.*|/([a-z]{2}/)?system/files/.*|/([a-z]{2}/)?flag/.*|.*/ajax/.*|.*/ahah/.*)$
 ```
 
-`VARNISH_STATIC_FILES`:
+#### `VARNISH_STATIC_FILES`
 
 ```
 pdf|asc|dat|txt|doc|xls|ppt|tgz|csv|png|gif|jpeg|jpg|ico|swf|css|js|svg
 ```
 
-`VARNISH_PRESERVED_COOKIES`:
+#### `VARNISH_PRESERVED_COOKIES`
 
 ```
 SESS[a-z0-9]+|SSESS[a-z0-9]+|NO_CACHE
 ```
 
-`VARNISH_SECONDARY_STORAGE_CONDITION`
+#### `VARNISH_SECONDARY_STORAGE_CONDITION`
 
 Allows defining custom conditions for storing the cache object in the secondary 
 storage; as it is injected into an `if` it has to contain valid VCL syntax for it.
